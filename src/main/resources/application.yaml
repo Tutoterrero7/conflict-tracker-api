@@ -10,12 +10,17 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop  # O 'create' para desarrollo
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-    defer-datasource-initialization: true  # Importante: carga data.sql DESPUÉS de crear tablas
+    defer-datasource-initialization: true  # IMPORTANTE
+
+  sql:
+    init:
+      mode: always  # Asegura que data.sql se ejecute
+      data-locations: classpath:data.sql
 
   h2:
     console:
