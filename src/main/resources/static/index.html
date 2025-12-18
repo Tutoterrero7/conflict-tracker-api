@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conflict Tracker</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #555;
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #005fa3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .loading {
+            background: #f0f8ff;
+            color: #007acc;
+        }
+
+        .error {
+            background: #ffe6e6;
+            color: #cc0000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        .status {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+
+        .active { background: #e6f7e6; color: #2d662d; }
+        .frozen { background: #fff8e6; color: #8a6d3b; }
+        .ended { background: #ffe6e6; color: #a94442; }
+
+        .endpoint {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #007acc;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .get { background: #61affe; color: white; }
+        .post { background: #49cc90; color: white; }
+        .put { background: #fca130; color: white; }
+        .delete { background: #f93e3e; color: white; }
+
+        .path {
+            font-family: monospace;
+            background: #f1f1f1;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+        .desc {
+            margin-top: 8px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<h1>Conflict Tracker API</h1>
+
+<h2>Test API</h2>
+<div class="controls">
+    <button onclick="loadData('all')">All Conflicts</button>
+    <button onclick="loadData('ACTIVE')">Active</button>
+    <button onclick="loadData('FROZEN')">Frozen</button>
+    <button onclick="loadData('ENDED')">Ended</button>
+</div>
+
+<div id="message" class="message"></div>
+
+<div id="results">
+    <!-- Results will appear here -->
+</div>
+
+<h2>API Endpoints</h2>
+
+<div class="endpoint">
+    <div><span class="method get">GET</span> <span class="path">/api/v1/conflicts</span></div>
+    <div class="desc">Get all conflicts</div>
+</div>
+
+<div class="endpoint">
+    <div><span class="method get">GET</span> <span class="path">/api/v1/conflicts?status=ACTIVE</span></div>
+    <div class="desc">Get conflicts by status (ACTIVE, FROZEN, ENDED)</div>
+</div>
+
+<div class="endpoint">
+    <div><span class="method get">GET</span> <span class="path">/api/v1/conflicts/{id}</span></div>
+    <div class="desc">Get conflict by ID</div>
+</div>
+
+<div class="endpoint">
+    <div><span class="method get">GET</span> <span class="path">/api/v1/countries/{code}/conflicts</span></div>
+    <div class="desc">Get conflicts by country code (ex: UKR, RUS)</div>
+</div>
+
+<div class="endpoint">
+    <div><span class="method post">POST</span> <span class="path">/api/v1/conflicts</span></div>
+    <div class="desc">Create new conflict</div>
+</div>
+
+<div class="endpoint">
+    <div><span class="method put">PUT</span> <span class="path">/api/v1/conflicts/{id}</span></div>
+    <div class="desc">Update conflict</div>
+</div>
+
+<div class="endpoint">
+    <div><span class="method delete">DELETE</span> <span class="path">/api/v1/conflicts/{id}</span></div>
+    <div class="desc">Delete conflict</div>
+</div>
+
+<div class="endpoint">
+    <div><span class="method get">GET</span> <span class="path">/api/v1/countries</span></div>
+    <div class="desc">Get all countries</div>
+</div>
+
+<div class="endpoint">
+    <div><span class="method get">GET</span> <span class="path">/api/v1/factions</span></div>
+    <div class="desc">Get all factions</div>
+</div>
+
+<div class="endpoint">
+    <div><span class="method get">GET</span> <span class="path">/api/v1/events</span></div>
+    <div class="desc">Get all events</div>
+</div>
+
+<script>
+    const messageEl = document.getElementById('message');
+    const resultsEl = document.getElementById('results');
+
+    function showMessage(text, type = '') {
+        messageEl.textContent = text;
+        messageEl.className = 'message ' + type;
+    }
+
+    function formatDate(dateStr) {
+        return new Date(dateStr).toLocaleDateString();
+    }
+
+    async function loadData(filter) {
+        showMessage('Loading...', 'loading');
+
+        try {
+            const url = filter === 'all'
+                ? '/api/v1/conflicts'
+                : `/api/v1/conflicts?status=${filter}`;
+
+            const response = await fetch(url);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error ${response.status}`);
+            }
+
+            const conflicts = await response.json();
+
+            if (conflicts.length === 0) {
+                resultsEl.innerHTML = '<p>No conflicts found</p>';
+                showMessage('');
+                return;
+            }
+
+            let html = '<table>';
+            html += '<tr><th>Name</th><th>Start Date</th><th>Status</th><th>Description</th></tr>';
+
+            conflicts.forEach(conflict => {
+                html += `
+                    <tr>
+                        <td><strong>${conflict.name}</strong></td>
+                        <td>${formatDate(conflict.startDate)}</td>
+                        <td><span class="status ${conflict.status.toLowerCase()}">${conflict.status}</span></td>
+                        <td>${conflict.description || ''}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</table>';
+            resultsEl.innerHTML = html;
+
+            showMessage(`Loaded ${conflicts.length} conflict(s)`);
+
+        } catch (error) {
+            showMessage(`Error: ${error.message}`, 'error');
+            resultsEl.innerHTML = '';
+        }
+    }
+
+    // Load initial data
+    loadData('all');
+</script>
+</body>
+</html>

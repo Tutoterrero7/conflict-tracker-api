@@ -1,8 +1,6 @@
 package com.conflicttracker.model;
 
 import jakarta.persistence.*;
-import jdk.jfr.Event;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,9 +37,9 @@ public class Conflict {
     private Set<Faction> factions = new HashSet<>();
 
     @OneToMany(mappedBy = "conflict", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Event> events = new HashSet<>();
+    private Set<ConflictEvent> events = new HashSet<>();
 
-    // Enum per al status
+    // Enum para el status
     public enum ConflictStatus {
         ACTIVE, FROZEN, ENDED
     }
@@ -56,27 +54,67 @@ public class Conflict {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public String getName() {
+        return name;
+    }
 
-    public ConflictStatus getStatus() { return status; }
-    public void setStatus(ConflictStatus status) { this.status = status; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public LocalDate getStartDate() {
+        return startDate;
+    }
 
-    public Set<Country> getCountries() { return countries; }
-    public void setCountries(Set<Country> countries) { this.countries = countries; }
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
 
-    public Set<Faction> getFactions() { return factions; }
-    public void setFactions(Set<Faction> factions) { this.factions = factions; }
+    public ConflictStatus getStatus() {
+        return status;
+    }
 
-    public Set<Event> getEvents() { return events; }
-    public void setEvents(Set<Event> events) { this.events = events; }
+    public void setStatus(ConflictStatus status) {
+        this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<Country> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(Set<Country> countries) {
+        this.countries = countries;
+    }
+
+    public Set<Faction> getFactions() {
+        return factions;
+    }
+
+    public void setFactions(Set<Faction> factions) {
+        this.factions = factions;
+    }
+
+    public Set<ConflictEvent> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<ConflictEvent> events) {
+        this.events = events;
+    }
 }
