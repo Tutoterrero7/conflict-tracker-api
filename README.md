@@ -1,27 +1,22 @@
 # Conflict Tracker API
 
-A RESTful API for tracking and managing information about global conflicts, built with Spring Boot 3 and Java 17.
+API REST para el seguimiento de conflictos bélicos a nivel mundial desarrollada con Spring Boot 3.
 
-## Features
+## 📋 Descripción del proyecto
 
-- Complete CRUD operations for conflicts, factions, countries, and events
-- RESTful API design following best practices
-- Layered architecture (Controller-Service-Repository)
-- Data Transfer Objects (DTOs) for request/response decoupling
-- H2 in-memory database for development
-- PostgreSQL compatibility for production
-- Sample frontend interface for testing
+Sistema de información sobre conflictos bélicos a nivel mundial llamado "Conflict Tracker API".
+El proyecto implementa una API REST completa que permite gestionar información sobre conflictos,
+países involucrados, facciones y eventos clave.
 
-## Prerequisites
+**Objetivos principales:**
+- Diseñar e implementar un modelo de datos relacional con Spring Data JPA
+- Construir una API REST bien estructurada siguiendo convenciones y mejores prácticas
+- Aplicar una arquitectura por capas separando responsabilidades
+- Implementar lógica de negocio en la capa de servicio
+- Utilizar Data Transfer Objects (DTOs) para desacoplar el modelo de datos de la API
 
-- Java 17 or higher
-- Maven 3.6+
-- (Optional) PostgreSQL for production
+## 🚀 Cómo compilar y ejecutar la aplicación
 
-## Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone <repository-url>
-cd conflict-tracker-api
+### Requisitos previos
+- **Java 17** o superior
+- **Maven 3.6** o superior

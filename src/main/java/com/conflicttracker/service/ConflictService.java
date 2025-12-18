@@ -70,7 +70,7 @@ public class ConflictService {
         conflictRepository.deleteById(id);
     }
 
-    // NUEVO MÉTODO: Obtener conflictos por código de país
+    // Obtener conflictos por código de país
     public List<ConflictDTO> getConflictsByCountryCode(String countryCode) {
         return conflictRepository.findByCountryCode(countryCode)
                 .stream()
