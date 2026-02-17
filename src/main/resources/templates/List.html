@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conflict Tracker - Llista de Conflictes</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- (Opcional) Font Awesome per icones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Petits ajustaments personalitzats */
+        .badge-active { background-color: #dc3545; }   /* vermell */
+        .badge-frozen { background-color: #ffc107; color: #000; }  /* groc */
+        .badge-ended { background-color: #6c757d; }    /* gris */
+        .table-description { max-width: 300px; }
+    </style>
+</head>
+<body class="bg-light">
+
+<!-- Navbar senzilla -->
+<nav class="navbar navbar-dark bg-dark mb-4">
+    <div class="container">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fas fa-globe-americas me-2"></i>Conflict Tracker
+            </span>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h2">Conflictes actius al món</h1>
+        <!-- Opcional: si després canvies d'idea i vols el botó de crear -->
+        <!-- <a href="#" th:href="@{/web/conflicts/new}" class="btn btn-primary">Nou conflicte</a> -->
+    </div>
+
+    <!-- Targeta amb la taula -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Nom</th>
+                        <th>Data d'inici</th>
+                        <th>Estat</th>
+                        <th>Descripció</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="conflict : ${conflicts}">
+                        <td th:text="${conflict.name}" class="fw-bold">Nom conflicte</td>
+                        <td th:text="${#temporals.format(conflict.startDate, 'dd/MM/yyyy')}">2023-01-01</td>
+                        <td>
+                            <span th:if="${conflict.status == 'ACTIVE'}" class="badge bg-danger">ACTIU</span>
+                            <span th:if="${conflict.status == 'FROZEN'}" class="badge bg-warning text-dark">CONGELAT</span>
+                            <span th:if="${conflict.status == 'ENDED'}" class="badge bg-secondary">ACABAT</span>
+                            <!-- Fallback si no coincideix -->
+                            <span th:if="${conflict.status != 'ACTIVE' and conflict.status != 'FROZEN' and conflict.status != 'ENDED'}"
+                                  th:text="${conflict.status}" class="badge bg-info">DESCONEGUT</span>
+                        </td>
+                        <td th:text="${conflict.description}" class="table-description text-muted">Descripció</td>
+                    </tr>
+                    <!-- Missatge si no hi ha conflictes -->
+                    <tr th:if="${conflicts.isEmpty()}">
+                        <td colspan="4" class="text-center text-muted py-4">No hi ha conflictes registrats</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
