@@ -6,7 +6,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop   # cámbialo a create-drop para que borre y cree todo
     show-sql: true
     defer-datasource-initialization: true
   sql:
